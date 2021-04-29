@@ -1,0 +1,9 @@
+# CRCNS.org 'bf-1' dataset files
+# To use this for fetching files, comment out files that are
+# not needed by putting a '#' as the first character on the line (default mode)
+# or put a '+' as the first character to specifiy files to be fetched (+ mode).
+# mode='default' (change to '+' for + mode).
+ basal_forebrain_lfp.tar.gz	22301364 (21.2 MB)
+ docs/crcns_bf-1_data_description.docx	24580 (24.0 KB)
+ docs/crcns_bf-1_data_description.pdf	66706 (65.1 KB)
+ checksums.md5	251
