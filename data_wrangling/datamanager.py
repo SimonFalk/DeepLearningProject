@@ -104,14 +104,15 @@ class DataLoader:
         
         if sessions == 'all':
             sessions = [f's{no}' for no in range(1, 11)]
-            sessions = [f'{self.root}{path}{s}' for s in sessions]
-            tmp = []
-            for s in sessions:
-                for p in os.listdir(s):
-                    if 'data_primary' in p:
-                        tmp.append(f'{s}/{p}')
-            sessions = tmp
-            del tmp
+            
+        sessions = [f'{self.root}{path}{s}' for s in sessions]
+        tmp = []
+        for s in sessions:
+            for p in os.listdir(s):
+                if 'data_primary' in p:
+                    tmp.append(f'{s}/{p}')
+        sessions = tmp
+        del tmp
             
         datas = {}
         for s in sessions:
