@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.io as sio
+import scipy.signal as sig
 import os
 from h5py import File as h5pyFile
 
@@ -64,6 +65,53 @@ class DataLoader:
                 
             '''
         }
+    
+    def spectrogram_base(
+        self,
+        signal,
+        fs,
+        nperseg,
+        noverlap,
+        nfft,
+        f_lo,
+        f_hi,
+        window = 'boxcar',
+        normalize = True
+    ):
+        freqs, times, spect = sig.spectrogram(
+            signal,
+            fs,
+            window,
+            nperseg,
+            noverlap,
+            nfft,
+            scaling = 'spectrum'
+        )
+        
+        if fs / 2 < f_hi:
+            print(f'''
+                Spectrogram warning: Input f_hi = {f_hi}, fs = {fs}
+                Maximum frequency measureable = fs / 2 := {fs / 2}
+                Automatically setting f_hi = {fs / 2}
+            ''')
+            f_hi = fs / 2
+            
+        if 1. / (nperseg / fs) > f_lo:
+            print(f'''
+                Spectrogram warning: Input f_lo = {f_lo}, nperseg = {nperseg}, fs = {fs}
+                Minimum frequency measureable = 1 / (nperseg / fs) := {1. / (nperseg / fs)}
+                Automatically setting f_lo = {1. / (nperseg / fs)}
+            ''')
+            f_lo = 1. / (nperseg / fs)
+        
+        freqs_idxs = (freqs >= f_lo) & (freqs <= f_hi)
+        spect = spect[freqs_idxs].T
+
+        if normalize:
+            spect = np.sqrt(spect)
+            spect = (spect - spect.mean(0).reshape((1, -1))) / spect.std(0).reshape((1, -1))
+
+        return freqs, freqs_idxs, times, spect
         
     def get_bf1(
         self, 
@@ -72,28 +120,36 @@ class DataLoader:
         path = 'bf-1/basal_forebrain_lfp/'
     ):
         
+        # Basic path-building
         if sessions == 'all':
             sessions = os.listdir(f'{self.root}{path}')
             
         datas = [sio.loadmat(f'{self.root}{path}{f}') for f in sessions]
         
-        if not extra:
-            return {
+        # Build output object
+        if extra:
+            # Some extra data: not likely interesting
+            out = {
                 f.replace('.mat', '').split('/')[-1]: {
                     'data': obj['LFP_data'],
                     'time': obj['T_data'],
-                    'extra': obj['mov_data']
+                    'extra': obj['mov_data'],
+                    'fs': 400
                 }
                 for obj, f in zip(datas, sessions)
             }
-        
-        return {
-            f.replace('.mat', '').split('/')[-1]: {
-                'data': obj['LFP_data'],
-                'time': obj['T_data']
+        else:
+            # Without extra data
+            out = {
+                f.replace('.mat', '').split('/')[-1]: {
+                    'data': obj['LFP_data'],
+                    'time': obj['T_data'],
+                    'fs': 400
+                }
+                for obj, f in zip(datas, sessions)
             }
-            for obj, f in zip(datas, sessions)
-        }
+    
+        return out
     
     
     def get_fcx2(
@@ -114,7 +170,7 @@ class DataLoader:
         sessions = tmp
         del tmp
             
-        datas = {}
+        out = {}
         for s in sessions:
             with h5pyFile(s, 'r') as fp:
                 data = np.array(fp['gdat_clean_filt'])
@@ -124,8 +180,35 @@ class DataLoader:
                 #   (Note: == 0 comparisson works, since no non-trash-value is close enough to 0 to return true)
                 data = data[data != 0].reshape((-1, data.shape[1]))
                 
-                datas[s.split('/')[-2]] = {
-                    'data': data
+                sess = s.split('/')[-2]
+                out[sess] = {
+                    'data': data,
+                    'fs': 500 if ('8' in sess or '9' in sess) else 1000
                 }
                 
-        return datas
+#         Construct spectrogram functions
+        for sess, obj in out.items():
+            def spect_for_sess(
+                channel,
+                nperseg   = 100,
+                noverlap  = 75,
+                nfft      = 2 ** 12,
+                f_lo      = 10,
+                f_hi      = 100,
+                window    = 'boxcar',
+                normalize = True
+            ):
+                return self.spectrogram_base(
+                    obj['data'].T[channel].flatten(),
+                    obj['fs'],
+                    nperseg,
+                    noverlap,
+                    nfft,
+                    f_lo,
+                    f_hi,
+                    window = 'boxcar',
+                    normalize = True
+                )
+            obj['spectrogram'] = spect_for_sess
+                
+        return out
