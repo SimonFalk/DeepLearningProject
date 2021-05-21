@@ -13,30 +13,35 @@ class DataLoader:
             
     def get_data_descriptions(self):
         return {
-            'bf1': '''
             
-                bf = Basal Forebrain.
+            '''
+            No longer in use.
+            '''
             
-                LFP recordings from rats in two conditions.
-                (a) Resting condition in home cage.
-                (b) Exploration of novel arena.
-                Waking state only - no sleep epochs.
-                Sampling rate 400 Hz.
-                Times somewhat irregular; very short.
-                Includes some data relating to movement (extra).
+#             'bf1': '''
+            
+#                 bf = Basal Forebrain.
+            
+#                 LFP recordings from rats in two conditions.
+#                 (a) Resting condition in home cage.
+#                 (b) Exploration of novel arena.
+#                 Waking state only - no sleep epochs.
+#                 Sampling rate 400 Hz.
+#                 Times somewhat irregular; very short.
+#                 Includes some data relating to movement (extra).
                 
-                Basal forebrain contributes to default mode network regulation
-                Jayakrishnen Nair, Arndt-Lukas Klaassen, Jozsef Arato, Alexei L. Vyssotski,
-                Michael Harvey, Gregor Rainer
-                PNAS (2018) doi:10.1073/pnas.1712431115
+#                 Basal forebrain contributes to default mode network regulation
+#                 Jayakrishnen Nair, Arndt-Lukas Klaassen, Jozsef Arato, Alexei L. Vyssotski,
+#                 Michael Harvey, Gregor Rainer
+#                 PNAS (2018) doi:10.1073/pnas.1712431115
                 
-                Jayakrishnen Nair, Arndt-Lukas Klaassen, Jozsef Arato, Alexei L. Vyssotski, Michael
-                Harvey, Gregor Rainer (2018); Basal forebrain LFP recordings from rats in home cage
-                and during arena exploration. CRCNS.org.
-                http://dx.doi.org/10.6080/K0MK6B2Q
+#                 Jayakrishnen Nair, Arndt-Lukas Klaassen, Jozsef Arato, Alexei L. Vyssotski, Michael
+#                 Harvey, Gregor Rainer (2018); Basal forebrain LFP recordings from rats in home cage
+#                 and during arena exploration. CRCNS.org.
+#                 http://dx.doi.org/10.6080/K0MK6B2Q
                 
-                http://crcns.org/data-sets/bf/bf-1/about-bf-1
-            ''',
+#                 http://crcns.org/data-sets/bf/bf-1/about-bf-1
+#             ''',
             
             'fcx2': '''
                 
@@ -113,43 +118,47 @@ class DataLoader:
 
         return freqs, freqs_idxs, times, spect
         
-    def get_bf1(
-        self, 
-        sessions = 'all', 
-        extra = False,
-        path = 'bf-1/basal_forebrain_lfp/'
-    ):
+        '''
+        No longer in use.
+        '''
         
-        # Basic path-building
-        if sessions == 'all':
-            sessions = os.listdir(f'{self.root}{path}')
+#     def get_bf1(
+#         self, 
+#         sessions = 'all', 
+#         extra = False,
+#         path = 'bf-1/basal_forebrain_lfp/'
+#     ):
+        
+#         # Basic path-building
+#         if sessions == 'all':
+#             sessions = os.listdir(f'{self.root}{path}')
             
-        datas = [sio.loadmat(f'{self.root}{path}{f}') for f in sessions]
+#         datas = [sio.loadmat(f'{self.root}{path}{f}') for f in sessions]
         
-        # Build output object
-        if extra:
-            # Some extra data: not likely interesting
-            out = {
-                f.replace('.mat', '').split('/')[-1]: {
-                    'data': obj['LFP_data'],
-                    'time': obj['T_data'],
-                    'extra': obj['mov_data'],
-                    'fs': 400
-                }
-                for obj, f in zip(datas, sessions)
-            }
-        else:
-            # Without extra data
-            out = {
-                f.replace('.mat', '').split('/')[-1]: {
-                    'data': obj['LFP_data'],
-                    'time': obj['T_data'],
-                    'fs': 400
-                }
-                for obj, f in zip(datas, sessions)
-            }
+#         # Build output object
+#         if extra:
+#             # Some extra data: not likely interesting
+#             out = {
+#                 f.replace('.mat', '').split('/')[-1]: {
+#                     'data': obj['LFP_data'],
+#                     'time': obj['T_data'],
+#                     'extra': obj['mov_data'],
+#                     'fs': 400
+#                 }
+#                 for obj, f in zip(datas, sessions)
+#             }
+#         else:
+#             # Without extra data
+#             out = {
+#                 f.replace('.mat', '').split('/')[-1]: {
+#                     'data': obj['LFP_data'],
+#                     'time': obj['T_data'],
+#                     'fs': 400
+#                 }
+#                 for obj, f in zip(datas, sessions)
+#             }
     
-        return out
+#         return out
     
     
     def get_fcx2(

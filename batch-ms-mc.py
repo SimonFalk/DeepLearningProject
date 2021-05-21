@@ -177,15 +177,15 @@ if architecture == 2:
     signals, labels = Splitter()(input_layer)
 
     encoder1 = layers.Bidirectional(
-        layers.LSTM(64, dropout = 0.3, return_sequences = True),
+        layers.LSTM(64, return_sequences = True),
     )(signals)
     
     encoder2 = layers.Bidirectional(
-        layers.LSTM(64, dropout = 0.3, return_sequences = True),
+        layers.LSTM(64, return_sequences = True),
     )(encoder1)
     
     encoder3 = layers.Bidirectional(
-        layers.LSTM(64, dropout = 0.3, return_sequences = True),
+        layers.LSTM(64, return_sequences = True),
     )(encoder2)
     
     slicer = layers.Lambda(lambda inputs: inputs[:, -t_out:, :])(encoder3)
@@ -201,17 +201,21 @@ if architecture == 3:
     input_layer = layers.Input((t_in, n_c_max + 1))
     signals, labels = Splitter()(input_layer)
 
-    encoder = layers.Bidirectional(
-        layers.LSTM(128, dropout = 0.3, return_sequences = True),
+    encoder1 = layers.Bidirectional(
+        layers.LSTM(64, return_sequences = True),
     )(signals)
     
-    slicer = layers.Lambda(lambda inputs: inputs[:, -t_out:, :])(encoder)
+    encoder2 = layers.Bidirectional(
+        layers.LSTM(64, return_sequences = True),
+    )(encoder1)
+    
+    slicer = layers.Lambda(lambda inputs: inputs[:, -t_out:, :])(encoder2)
     
     decoder1 = layers.Bidirectional(
-        layers.LSTM(128, dropout = 0.3, return_sequences = True)
+        layers.LSTM(64, return_sequences = True)
     )(slicer)
     decoder2 = layers.Bidirectional(
-        layers.LSTM(128, dropout = 0.3, return_sequences = True)
+        layers.LSTM(64, return_sequences = True)
     )(decoder1)
 
     regressor = layers.Dense(n_c_max)(decoder2)
