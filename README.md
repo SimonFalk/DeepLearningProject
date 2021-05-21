@@ -29,6 +29,9 @@ Interpreting batch test folder names:
     <li>None of the above: Single session, single channel spectrogram.</li>
 </ul>
 
+#### spect_res
+Results from most the batch tests concerned with spectrogram data. Histograms and mse values from the tests conducted in spect-ms-mc.py.
+
 #### ae-multisession-multichannel.ipynb
 Notebook for conducting multisession multichannel autoencoder experiments.
 
@@ -43,6 +46,9 @@ Experimentation notebook for multisession multichannel signal prediction. Contai
 
 #### spect-ms-mc.py
 Batch tests for all architectures - multichannel multisession (for spectrogram data, with sample estimates of mean and std).
+
+### run-ms-mc.sh
+Shell script for running the batch tests, with the prescribed parameter combinations.
 
 #### spect-results.ipynb
 Presents the results produced in the batch tests made on spectrogram data.
