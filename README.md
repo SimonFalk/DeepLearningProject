@@ -40,3 +40,9 @@ Batch tests for all architectures - only multichannel multisession signal.
 
 #### multisession-multichannel.ipynb
 Experimentation notebook for multisession multichannel signal prediction. Contains informative figures.
+
+#### spect-ms-mc.py
+Batch tests for all architectures - multichannel multisession (for spectrogram data, with sample estimates of mean and std).
+
+#### spect-results.ipynb
+Presents the results produced in the batch tests made on spectrogram data.
