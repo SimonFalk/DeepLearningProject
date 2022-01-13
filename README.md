@@ -1,8 +1,22 @@
-# Deep learning Project
-The project for the course Deep Learning in Data Science, DD2424 at KTH. 
-By Simon Falk and Gustav Röhss. 
+![Predicted iEEG spectrograms](/figures/sampleSpectrogram.png)
 
-### Dataset source:
+# Predicting Brain Signals
+May 2020.
+
+Course project for DD2424 Deep Learning in Data Science at KTH.
+
+Authors: Simon Falk <simonfal@kth.se> and Gustav Röhss <grohss@kth.se>
+
+## Project in short
+We explored the problem of sequence-to-sequence prediction in the context of iEEG brain signals.
+
+We tried three different model architectures, all using Bi-LSTM cells.
+
+Predictions are generally satisfactory for short sequences (100ms as input pattern, 10ms for prediction)
+
+Predictions were weak for long sequences (100ms as input pattern, 100ms for prediction)
+
+## Dataset source:
 http://crcns.org/data-sets/fcx/fcx-2/about-fcx-2
 
 ### File structure
